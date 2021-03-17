@@ -30,7 +30,7 @@ module instr_register_test
     $display(    "***********************************************************");
 
     $display("\nReseting the instruction register...");
-    write_pointer  = 5'h00;         // initialize write pointer
+    intf.cb.write_pointer  = 5'h00;         // initialize write pointer
     read_pointer   = 5'h1F;         // initialize read pointer
     load_en        = 1'b0;          // initialize load control line
     reset_n       <= 1'b0;          // assert reset_n (active low)
