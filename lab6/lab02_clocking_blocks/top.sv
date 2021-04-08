@@ -47,19 +47,17 @@ module top;
   end
 
   initial begin
-    test_clk <=0;
-    // offset test_clk edges from clk to prevent races between
-    // the testbench and the design
-    //
-    // THIS TEST CLOCK WILL BE REPLACED BY A CLOCKING BLOCK IN THE
-    // INTERFACE BETWEEN THE TESTBENCH AND THE DUT
-  
-    #4 forever begin
-      #2ns test_clk = 1'b1;
-      #8ns test_clk = 1'b0;
-    end
-    
-    
+		test_clk <=0;
+		// offset test_clk edges from clk to prevent races between
+		// the testbench and the design
+		//
+		// THIS TEST CLOCK WILL BE REPLACED BY A CLOCKING BLOCK IN THE
+		// INTERFACE BETWEEN THE TESTBENCH AND THE DUT
+	  
+		#4 forever begin
+		  #2ns test_clk = 1'b1;
+		  #8ns test_clk = 1'b0;
+		end
   end
 
 endmodule: top
