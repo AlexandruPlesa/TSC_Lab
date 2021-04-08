@@ -16,16 +16,16 @@ module top;
   // clock variables
   logic clk;
   logic test_clk;
-
+  
+ // instantiate the testbench interface
   tb_ifc intf(
     .clk(test_clk)
   );
 
- // instantiate the testbench interface
-  tb_ifc ifc (.clk(test_clk));
+
 
   // connect interface to testbench
-  instr_register_test test (.ifc(ifc));
+  instr_register_test test (.ifc(intf));
 
   // connect interface to design using discrete ports
   instr_register dut (

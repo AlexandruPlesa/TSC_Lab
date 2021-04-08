@@ -21,14 +21,14 @@ int seed = 555;
 class Transaction; 
 	rand opcode_t       opcode;
 	rand operand_t      operand_a, operand_b;
-	rand address_t      write_pointer;
+	address_t      write_pointer;
 	
 	constraint const_operand_a{
 		operand_a >= -15;
 		operand_a <= 15;
 	};
 	constraint const_operand_b{
-		operand_b >= -15;
+		operand_b >= 0;
 		operand_b <= 15;
 	};
 	
@@ -68,6 +68,16 @@ class Driver;
 		this.vifc = vifc;
 	endfunction
 	
+	function void assign_signals();
+			static int temp = 0;
+			vifc.cb.opcode <= tr.opcode;
+			vifc.cb.operand_a <= tr.operand_a;
+			vifc.cb.operand_b <= tr.operand_b;
+			vifc.cb.write_pointer <= tr.write_pointer;
+			vifc.cb.write_pointer <= temp++;
+	endfunction: assign_signals
+	
+	
 	task generate_transaction();
 		$display("\n\n***********************************************************");
 		$display(    "***  THIS IS NOT A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
@@ -84,10 +94,7 @@ class Driver;
 		repeat (3) begin
 			@vifc.cb  tr.randomize();
 			
-			vifc.cb.opcode <= tr.opcode;
-			vifc.cb.operand_a <= tr.operand_a;
-			vifc.cb.operand_b <= tr.operand_b;
-			vifc.cb.write_pointer <= tr.write_pointer;
+			assign_signals();
 			
 			@vifc.cb tr.print_transaction;
 			
