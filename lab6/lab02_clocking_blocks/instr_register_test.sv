@@ -63,9 +63,58 @@ class Driver;
 	Transaction tr;
 	virtual tb_ifc vifc;
 	
+	covergroup inputs_measure;
+		cov_0: coverpoint vifc.cb.opcode{
+					bins val_zero = {ZERO};
+					bins val_passa = {PASSA};
+					bins val_passb = {PASSB};
+					bins val_add = {ADD};
+					bins val_sub = {SUB};
+					bins val_mult = {MULT};
+					bins val_div = {DIV};
+					bins val_mod = {MOD};
+		}
+		
+		cov_1 : coverpoint vifc.cb.operand_a{
+					bins val_op_a [] = {[-15:15]};
+		
+		}
+		cov_2 : coverpoint vifc.cb.operand_b{
+					bins val_op_b [] = {[0:15]};
+		
+		}
+		
+		cov_3: coverpoint vifc.cb.operand_a{
+				bins val_op_a_neg [] = {[-15:-1]};
+				bins val_op_a_poz [] = {[0:15]};
+		}
+		
+		cov_4 : cross cov_0,cov_3 {
+			ignore_bins poz_ignore = binsof(cov_3.val_op_a_poz);
+		}
+		
+		cov_5_1 : coverpoint vifc.cb.operand_a{
+			
+			bins val_op_a [] = {-15,15};
+			
+		}
+		cov_5_2 : coverpoint vifc.cb.operand_b {
+			bins val_op_b [] = {0,15};
+		}
+		
+		cov_5 : cross cov_0, cov_5_1, cov_5_2{
+			
+		}
+		
+		
+		
+	
+	endgroup
+	
 	function new(virtual tb_ifc vifc);
 		tr = new();
 		this.vifc = vifc;
+		inputs_measure = new();
 	endfunction
 	
 	function void assign_signals();
@@ -97,6 +146,7 @@ class Driver;
 			assign_signals();
 			
 			@vifc.cb tr.print_transaction;
+			inputs_measure.sample;
 			
 		end
 		@vifc.cb vifc.cb.load_en <= 1'b0;  // turn-off writing to register
@@ -112,6 +162,9 @@ class Driver;
 			
 			vifc.cb.reset_n       <= 1'b1;       // assert reset_n (active low)
 	endtask: reset_instruction_registers
+	
+	
+	
 endclass: Driver
 
 
@@ -120,6 +173,7 @@ class Monitor;
 	
 	function new(virtual tb_ifc vifc);
 		this.vifc = vifc;
+
 	endfunction
 	
 	function void print_results;
@@ -160,6 +214,7 @@ initial begin
 	
 	drv.generate_transaction();
 	mon.read_transaction();
+	
 	
    $finish;
 end

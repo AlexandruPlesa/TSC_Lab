@@ -15,17 +15,15 @@ module top;
 
   // clock variables
   logic clk;
-  logic test_clk;
+  //logic test_clk;
 
+  // instantiate the testbench interface
   tb_ifc intf(
-    .clk(test_clk)
+    .clk(clk)
   );
 
- // instantiate the testbench interface
-  tb_ifc ifc (.clk(test_clk));
-
   // connect interface to testbench
-  instr_register_test test (.ifc(ifc));
+  instr_register_test test (.ifc(intf));
 
   // connect interface to design using discrete ports
   instr_register dut (
@@ -46,20 +44,18 @@ module top;
     forever #5  clk = ~clk;
   end
 
-  initial begin
-    test_clk <=0;
+	//initial begin
+    // test_clk <=0;
     // offset test_clk edges from clk to prevent races between
     // the testbench and the design
     //
     // THIS TEST CLOCK WILL BE REPLACED BY A CLOCKING BLOCK IN THE
     // INTERFACE BETWEEN THE TESTBENCH AND THE DUT
   
-    #4 forever begin
-      #2ns test_clk = 1'b1;
-      #8ns test_clk = 1'b0;
-    end
-    
-    
-  end
+    //  #4 forever begin
+    //   #2ns test_clk = 1'b1;
+    //   #8ns test_clk = 1'b0;
+    //  end
+	//  end
 
 endmodule: top
